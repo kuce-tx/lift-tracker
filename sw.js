@@ -1,9 +1,10 @@
 // Lift Tracker service worker: cache-first app shell for offline use.
-const CACHE = 'lift-tracker-v1';
+// Bump CACHE on every release so installed phones fetch the new files (v2: notes, lock, safer delete, share).
+const CACHE = 'lift-tracker-v2';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS.map((u) => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (e) => {
